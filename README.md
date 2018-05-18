@@ -2,7 +2,7 @@
 
 # Diagram flow :
 
-![alt text](https://raw.githubusercontent.com/suker200/kube_waf/master/k8s-dns-local-caching.png)
+![alt text](https://raw.githubusercontent.com/suker200/kube_initializer/master/k8s-dns-local-caching.png)
 
 # Requirement:
  - k8s 1.8+
