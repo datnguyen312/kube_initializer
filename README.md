@@ -16,12 +16,12 @@
 - Developer: We don't allow developer create loadbalancer from k8s or ingress class, service type etc..
 
 # How to:
-DNS:
+DNS:<br>
 	- deploy dns-daemonset: support dns failover
 	- Every deployment will be injected:
 	  + initcontainer: get node's ip to be nameserver and put on top of resolv.conf --> {emptyDir}/resolv.conf
 	  + volumes + volumeMount: mount {emptyDir}/resolv.conf /etc/resolv.conf
-Developer:
+Developer:<br>
 	- ingress
 	- service
 	- nodeAffinity
