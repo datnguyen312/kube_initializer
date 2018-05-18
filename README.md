@@ -12,7 +12,7 @@
  - We allow developer deploy manifest to k8s cluster but don't allow they create loadbalancer, storage etc.. 
 
 # Target:
-- DNS: We apply dns-local-caching on every node, pod's resolv.conf must point to node's dns port before go to kube-dns, so when kube-dns failed/network issue, dns-local-caching support dns failover to dns tale records (1day).
+- DNS: We apply dns-local-caching on every node, pod's resolv.conf must point to node's dns port before go to kube-dns, so when kube-dns failed/network issue or sometime Global dns failed, dns-local-caching support dns failover to dns tale records (1day).
 - Developer: We don't allow developer create loadbalancer from k8s or ingress class, service type etc..
 
 # How to:
