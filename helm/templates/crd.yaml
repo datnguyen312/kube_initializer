@@ -1,0 +1,17 @@
+# apiVersion: admissionregistration.k8s.io/v1alpha1
+# kind: InitializerConfiguration
+# metadata:
+#   name: deployment-suker200-config
+# initializers:
+#   # the name needs to be fully qualified, i.e., containing at least two "."
+#   - name: deployment.initializer.suker200.com
+#     rules:
+#       # apiGroups, apiVersion, resources all support wildcard "*".
+#       # "*" cannot be mixed with non-wildcard.
+#       - apiGroups:
+#           - "*"
+#         apiVersions:
+#           - "*"
+#         resources:
+#           - deployments
+#           - services

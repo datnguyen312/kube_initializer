@@ -1,0 +1,21 @@
+image: suker200/initializers
+
+configmap:
+  config: |
+    userConfig:
+      local_dns:
+        enable: true
+        namespacePattern: "(suker200|tanl)$"
+      developer:
+        enable: false
+        namespacePattern: ".*-dev$"
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: spot.instance.reserve
+              operator: Exists
+        ingress:
+          class: nginx-internal
+        service:
+          type:
+            - ClusterIP
+            - None

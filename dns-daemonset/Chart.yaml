@@ -1,0 +1,4 @@
+apiVersion: v1
+description: local-dns-caching
+name: local-dns-caching
+version: 0.1.0

@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: kube-system
+  initializers:
+    pending: []
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      serviceAccountName: {{ template "fullname" . }}
+      containers:
+      - name: initializers
+        image: {{ .Values.image }}
+        imagePullPolicy: Always
+        args:
+        - -namespace=kube-system
+        - -configmap={{ template "fullname" . }}
+        resources:
+          requests:
+            cpu: 110m
+            memory: 100Mi
+          limits:
+            cpu: 110m
+            memory: 300Mi

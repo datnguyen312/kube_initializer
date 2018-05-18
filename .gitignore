@@ -1,0 +1,4 @@
+*.bak
+alpine_repositories
+vendor
+kube_initialier

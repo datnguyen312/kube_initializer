@@ -1,0 +1,128 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: dns-local-caching
+  name: dns-local-caching
+  namespace: kube-system
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: dns-local-caching
+    spec:
+      hostNetwork: true
+      containers:
+      - args:
+        - |
+          echo 'https://alpine.global.ssl.fastly.net/alpine/v3.7/main' > /etc/apk/repositories && \
+          echo 'https://alpine.global.ssl.fastly.net/alpine/v3.7/community/' >> /etc/apk/repositories && \
+          apk update && apk add dnsmasq && \
+              echo 'user=root' > /etc/dnsmasq.conf && \
+              dnsmasq -logtostderr \
+                      --port=53 \
+                      -k \
+                      -R \
+                      --cache-size=1000 \
+                      --log-facility=- \
+                      --server=/cluster.local/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --server=/cluster.local/127.0.0.1#10533 \
+                      --server=/in-addr.arpa/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --server=/in6.arpa/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --server=127.0.0.1#10533 \
+                      --all-servers \
+                      --no-negcache
+        command: ["/bin/sh", "-c"]
+        image: alpine
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          tcpSocket:
+            port: 53
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: dnsmasq
+        ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 150m
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - args:
+        - |
+          ./microdns-proxy -delay=1 -listen_port=":10533" -upstream="127.0.0.1:10053"
+        image: {{ .Values.image.dns_proxy }}
+        command: ["/bin/sh", "-c"]
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          tcpSocket:
+            port: 10533
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: dns-proxy
+        ports:
+        - containerPort: 10533
+          name: metrics
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - args:
+        - |
+          echo 'https://alpine.global.ssl.fastly.net/alpine/v3.7/main' > /etc/apk/repositories && \
+          echo 'https://alpine.global.ssl.fastly.net/alpine/v3.7/community/' >> /etc/apk/repositories && \
+          apk update && apk add dnsmasq && \
+              echo 'user=root' > /etc/dnsmasq.conf && \
+              dnsmasq -logtostderr \
+                      --port=10053 \
+                      -k \
+                      --cache-size=1000 \
+                      --log-facility=- \
+                      --server=/cluster.local/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --server=/in-addr.arpa/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --server=/in6.arpa/{{ .Values.DNS_CLUSTER_IP }}#53 \
+                      --no-negcache \
+                      --min-cache-ttl=86400
+        command: ["/bin/sh", "-c"]
+        image: alpine
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          tcpSocket:
+            port: 10053
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: dnsmasqfailover
+        resources:
+          requests:
+            cpu: 150m
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: Default
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists

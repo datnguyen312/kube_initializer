@@ -1,0 +1,17 @@
+---
+developer:
+  enable: false
+  namespacePattern: ".*-dev$"
+  nodeSelectorTerms:
+    - matchExpressions:
+      - key: spot.instance.reserve
+        operator: Exists
+  ingress:
+  	class: nginx-internal
+  service:
+  	type:
+  		- ClusterIP
+  		- None
+local_dns:
+  enable: true
+  namespacePattern: ".*-dev$"

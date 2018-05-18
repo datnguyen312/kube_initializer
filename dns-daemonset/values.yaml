@@ -1,0 +1,5 @@
+DNS_CLUSTER_IP: 100.64.0.10
+image:
+  dns_proxy: suker200/microdns-proxy
+  dnsmasq: k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.5
+  sidecar: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.5

@@ -1,0 +1,26 @@
+package: kube_initializer 
+import:
+- package: k8s.io/api/apps/v1beta1
+  version: release-1.8
+- package: k8s.io/api/core/v1
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/apis/meta/v1
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/fields
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/runtime
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/types
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/util/strategicpatch
+  version: release-1.8
+- package: k8s.io/apimachinery/pkg/watch
+  version: release-1.8
+- package: k8s.io/client-go/kubernetes
+  version: release-5.0
+- package: k8s.io/client-go/rest
+  version: release-5.0
+- package: k8s.io/client-go/tools/cache
+  version: release-5.0
+- package: k8s.io/kubernetes
+  version: release-1.8
