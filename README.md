@@ -20,7 +20,7 @@ DNS:<br>
 	- deploy dns-daemonset: support dns failover
 	- Every deployment will be injected:
 	  + initcontainer: get node's ip to be nameserver and put on top of resolv.conf --> {emptyDir}/resolv.conf
-	  + volumes + volumeMount: mount {emptyDir}/resolv.conf /etc/resolv.conf
+	  + volumes + volumeMount: mount {emptyDir}/resolv.conf /etc/resolv.conf <br>
 Developer:<br>
 	- ingress
 	- service
