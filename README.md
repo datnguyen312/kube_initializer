@@ -64,7 +64,7 @@ local_dns:
 
 # Build
 
-- Build kube_waf
+- Build kube_initializer
 
 ```
 glide up --strip-vendor
